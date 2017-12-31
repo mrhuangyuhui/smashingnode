@@ -1,24 +1,9 @@
-
-/**
- * Module dependencies.
- */
-
 var connect = require('connect')
+var path = require('path')
+var serveStatic = require('serve-static')
 
-/**
- * Create server.
- */
+var server = connect()
 
-var server = connect.createServer();
+server.use(serveStatic(path.join(__dirname, 'website')))
 
-/**
- * Handle static files.
- */
-
-server.use(connect.static(__dirname + '/website'));
-
-/**
- * Listen.
- */
-
-server.listen(3000);
+server.listen(3000)
