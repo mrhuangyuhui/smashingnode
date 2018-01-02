@@ -1,31 +1,13 @@
-
-/**
- * Module dependencies.
- */
-
 var connect = require('connect')
+var morgan = require('morgan')
+var serveStatic = require('serve-static')
+var path = require('path')
 
-/**
- * Create server.
- */
+var server = connect()
 
-var server = connect.createServer();
+server.use(morgan('dev'))
+server.use(morgan('type is :res[content-type], length is '
+  + ':res[content-length] and it took :response-time ms.'))
+server.use(serveStatic(path.join(__dirname, 'website')))
 
-/**
- * Perform logging.
- */
-
-server.use(connect.logger({ format: 'type is :res[content-type], length is '
-  + ':res[content-length] and it took :response-time ms.', immediate: false }));
-
-/**
- * Handle static files.
- */
-
-server.use(connect.static(__dirname + '/website'));
-
-/**
- * Listen.
- */
-
-server.listen(3000);
+server.listen(3000)
