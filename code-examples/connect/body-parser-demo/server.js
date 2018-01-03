@@ -1,19 +1,17 @@
-
-/**
- * Module requirements.
- */
-
 var connect = require('connect')
-  , fs = require('fs')
+var serveStatic = require('serve-static')
+var bodyParser = require('body-parser')
+var multer  = require('multer')
+var fs = require('fs')
+var path = require('path')
 
-/**
- * Create server
- */
+var server = connect()
 
-var server = connect(
-    connect.bodyParser()
-  , connect.static('static')
-  , function (req, res, next) {
+server.use(bodyParser.urlencoded({ extended: false }))
+server.use(multer({dest: '/tmp/'}).single('name'))
+server.use(serveStatic(path.join(__dirname, 'static')))
+
+server.use(function (req, res, next) {
       if ('POST' == req.method && req.body.file) {
         fs.readFile(req.body.file.path, 'utf8', function (err, data) {
           if (err) {
@@ -32,11 +30,6 @@ var server = connect(
       } else {
         next();
       }
-    }
-);
+    })
 
-/**
- * Listen.
- */
-
-server.listen(3000);
+server.listen(3000)
